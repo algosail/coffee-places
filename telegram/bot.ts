@@ -1,3 +1,4 @@
+import { InlineKeyboard } from "grammy";
 import { hydrateReply, parseMode } from "grammy_parse_mode";
 import { GrammyContext } from "$grammy/context.ts";
 
@@ -8,7 +9,8 @@ import commands, { listOfCommands } from "$grammy/handlers/commands/mod.ts";
 // import hearingComposer from "$grammy/middlewares/hearing.ts";
 import ping from "$grammy/middlewares/ping.ts";
 import session from "$grammy/middlewares/session.middleware.ts";
-import { TELEGRAM_BOT_TOKEN } from "$utils/constants.ts";
+import { TELEGRAM_BOT_TOKEN, WEBAPP_URL } from "$utils/constants.ts";
+import { findPlaces } from "$utils/locations.ts";
 
 export const grammy = new Bot<GrammyContext>(TELEGRAM_BOT_TOKEN);
 
@@ -25,10 +27,44 @@ grammy.use(ping);
 grammy.use(commands);
 // --- End menus
 
+grammy.on(":location", async (ctx) => {
+  await ctx.replyWithChatAction("typing");
+
+  if (!ctx.message?.location) {
+    ctx.reply("Send me a location ;)");
+    return;
+  }
+
+  const places = await findPlaces(ctx.message.location);
+
+  for (const place of places) {
+    await ctx.replyWithVenue(
+      place.location.latitude,
+      place.location.longitude,
+      place.title,
+      place.address
+    );
+
+    await ctx.reply(
+      `
+    <b>${place.title}</b>
+    \n${place.address}
+    ${place.description ? `\n<i>${place.description}</i>` : ""}
+    `,
+      {
+        reply_markup: {
+          inline_keyboard: new InlineKeyboard().webApp(
+            "Show card",
+            WEBAPP_URL + `/${place.id}`
+          ).inline_keyboard,
+        },
+      }
+    );
+  }
+});
+
 grammy.api
-  .setMyCommands(
-    listOfCommands.filter((c) => c.show)
-  )
+  .setMyCommands(listOfCommands.filter((c) => c.show))
   .then(() => {
     console.log("default commands have been uploaded to BotFather");
   })
