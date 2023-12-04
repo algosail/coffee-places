@@ -17,7 +17,24 @@ export default function Greet({ data }: PageProps<Place>) {
       <Head>
         <script src="https://telegram.org/js/telegram-web-app.js"></script>
       </Head>
-      <h1>{data.title}</h1>
+      <main>
+        <h1>{data.title}</h1>
+        <address>{data.address}</address>
+        <p>
+          {data.inst && (
+            <a href={data.inst} target="_black">
+              Instagram
+            </a>
+          )}
+        </p>
+        {data.description && (
+          <div
+            dangerouslySetInnerHTML={{
+              __html: data.description.replaceAll("\n", "<br />"),
+            }}
+          />
+        )}
+      </main>
       <InitializeWebApp />
     </>
   );

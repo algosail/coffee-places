@@ -10,15 +10,17 @@ export default defineRoute(async () => {
       <Head>
         <title>Places</title>
       </Head>
-      <h1>Places</h1>
-      <a href="/places/add">Add place</a>
-      <ul>
-        {places.map((it) => (
-          <li key={it.id}>
-            <a href={`/places/${it.id}`}>{it.title}</a>
-          </li>
-        ))}
-      </ul>
+      <main>
+        <h1>Places</h1>
+        <a href="/places/add">Add place</a>
+        <ul>
+          {places.map((it) => (
+            <li key={it.id}>
+              <a href={`/places/${it.id}`}>{it.title}</a>
+            </li>
+          ))}
+        </ul>
+      </main>
     </>
   );
 });
