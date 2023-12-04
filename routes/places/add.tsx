@@ -54,11 +54,11 @@ export default function AddPlace() {
           </label>
           <label>
             Latitude
-            <input name="latitude" type="number" required />
+            <input name="latitude" required />
           </label>
           <label>
             Longitude
-            <input name="longitude" type="number" required />
+            <input name="longitude" required />
           </label>
           <label>
             Address

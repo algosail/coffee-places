@@ -56,21 +56,11 @@ export default function AddPlace({ data }: PageProps<Place>) {
           </label>
           <label>
             Latitude
-            <input
-              name="latitude"
-              type="number"
-              required
-              value={data.location.latitude}
-            />
+            <input name="latitude" required value={data.location.latitude} />
           </label>
           <label>
             Longitude
-            <input
-              name="longitude"
-              type="number"
-              required
-              value={data.location.longitude}
-            />
+            <input name="longitude" required value={data.location.longitude} />
           </label>
           <label>
             Address
