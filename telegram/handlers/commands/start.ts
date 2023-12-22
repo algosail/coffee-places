@@ -1,22 +1,20 @@
-import { Composer } from "grammy";
+import { Composer } from 'grammy'
 
-import { GrammyContext } from "$grammy/context.ts";
-import { getFullName } from "$utils/grammy.ts";
+import { GrammyContext } from '$grammy/context.ts'
+import { getFullName } from '$utils/grammy.ts'
 
-const composer = new Composer<GrammyContext>();
+const composer = new Composer<GrammyContext>()
 
-composer.command("start", async (ctx) => {
-  await ctx.replyWithChatAction("typing");
-
+composer.command('start', async (ctx) => {
   await ctx.reply(
     `
-		Hi ${getFullName(ctx.from!).replaceAll(".", "")}, welcome to the <b>${
-      ctx.me.username
-    }</b>.
+		Hi ${
+      getFullName(ctx.from!).replaceAll('.', '')
+    }, welcome to the <b>${ctx.me.username}</b>.
     \nI am here to help you find good coffee places ☕️🎉
 		\nSend me your location
-    `
-  );
-});
+    `,
+  )
+})
 
-export default composer;
+export default composer

@@ -9,11 +9,11 @@ const session = new Composer<GrammyContext>()
 const storage = new DenoKVAdapter<any>(kv)
 
 session.use(
-    grammySession({
-        initial: (): GrammySession => ({}),
-        getSessionKey: ctx =>
-            `webapp_bot:${ctx.chat?.id.toString()}_${ctx.from?.id?.toString()}`,
-        storage,
-    })
+  grammySession({
+    initial: (): GrammySession => ({}),
+    getSessionKey: (ctx) =>
+      `webapp_bot:${ctx.chat?.id.toString()}_${ctx.from?.id?.toString()}`,
+    storage,
+  }),
 )
 export default session
