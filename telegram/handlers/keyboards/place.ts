@@ -5,9 +5,9 @@ export enum PlaceKeyboardKey {
   Delete = 'delete',
 }
 
-export const adminPlaceKeyboard = new InlineKeyboard()
-  .text('Edit', PlaceKeyboardKey.Edit)
-  .text('Delete', PlaceKeyboardKey.Delete)
+// export const adminPlaceKeyboard = new InlineKeyboard()
+//   .text('Edit', PlaceKeyboardKey.Edit)
+//   .text('Delete', PlaceKeyboardKey.Delete)
 
 export const createAdminPlaceKeyboard = (placeId: string) => {
   return new InlineKeyboard()

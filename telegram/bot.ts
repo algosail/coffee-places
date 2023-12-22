@@ -8,6 +8,7 @@ import commands, { listOfCommands } from '$grammy/handlers/commands/mod.ts'
 import { mainMenu } from '$grammy/handlers/menus/mod.ts'
 import conversationComposer from '$grammy/handlers/conversations/mod.ts'
 import triggerComposer from '$grammy/handlers/triggers/mod.ts'
+// import placeQuery from '$grammy/handlers/triggers/placeQuery.ts'
 // import groupEvents from "$grammy/middlewares/events.group.ts";
 // import hearingComposer from "$grammy/middlewares/hearing.ts";
 import ping from '$grammy/middlewares/ping.ts'
@@ -20,7 +21,6 @@ export const grammy = new Bot<GrammyContext>(TELEGRAM_BOT_TOKEN)
 // Plugins
 grammy.api.config.use(parseMode('HTML'))
 grammy.use(hydrateReply<GrammyContext>)
-
 grammy.use(session)
 grammy.use(conversations())
 
@@ -31,43 +31,44 @@ grammy.use(ping)
 grammy.use(conversationComposer)
 grammy.use(mainMenu)
 grammy.use(commands)
+grammy.use(triggerComposer)
+
 // --- End menus
 
-grammy.use(triggerComposer)
-grammy.on(':location', async (ctx) => {
-  await ctx.replyWithChatAction('typing')
+// grammy.on(':location', async (ctx) => {
+//   await ctx.replyWithChatAction('typing')
 
-  if (!ctx.message?.location) {
-    ctx.reply('Send me a location ;)')
-    return
-  }
+//   if (!ctx.message?.location) {
+//     ctx.reply('Send me a location ;)')
+//     return
+//   }
 
-  const places = await findPlaces(ctx.message.location)
+//   const places = await findPlaces(ctx.message.location)
 
-  for (const place of places) {
-    await ctx.replyWithVenue(
-      place.location.latitude,
-      place.location.longitude,
-      place.title,
-      place.address,
-    )
+//   for (const place of places) {
+//     await ctx.replyWithVenue(
+//       place.location.latitude,
+//       place.location.longitude,
+//       place.title,
+//       place.address,
+//     )
 
-    await ctx.reply(
-      `
-    <b>${place.title}</b>
-    \n${place.address}
-    `,
-      {
-        reply_markup: {
-          inline_keyboard: new InlineKeyboard().webApp(
-            'Show card',
-            WEBAPP_URL + `/${place.id}`,
-          ).inline_keyboard,
-        },
-      },
-    )
-  }
-})
+//     await ctx.reply(
+//       `
+//     <b>${place.title}</b>
+//     \n${place.address}
+//     `,
+//       {
+//         reply_markup: {
+//           inline_keyboard: new InlineKeyboard().webApp(
+//             'Show card',
+//             WEBAPP_URL + `/${place.id}`,
+//           ).inline_keyboard,
+//         },
+//       },
+//     )
+//   }
+// })
 
 grammy.api
   .setMyCommands(listOfCommands.filter((c) => c.show))

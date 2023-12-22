@@ -7,15 +7,18 @@ export const editPlace = async (
   con: GrammyConversation,
   ctx: GrammyContext,
 ) => {
-  const { placeId } = ctx.session
-  if (!placeId || !ctx.from?.username || !ADMINS.includes(ctx.from.username)) {
-    ctx.reply(`Access deny`)
+  if (
+    !con.session.placeId || !ctx.from?.username ||
+    !ADMINS.includes(ctx.from.username)
+  ) {
+    await ctx.reply(`Access deny`)
     return
   }
+  con.log('editPlace', con.session.placeId)
 
-  const place = await con.external(() => getPlace(placeId))
+  const place = await con.external(() => getPlace(con.session.placeId!))
   if (!place) {
-    ctx.reply(`Place not founded`)
+    await ctx.reply(`Place not founded`)
     return
   }
 

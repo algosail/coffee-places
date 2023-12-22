@@ -63,7 +63,7 @@ export const listPlaces = async (): Promise<Place[]> => {
 }
 
 export const getPlace = async (id: string): Promise<Place | null> => {
-  const res = await kv.get<Place>([PLACES_KEY, id])
+  const res = await kv.get<Place>([PLACES_ID_KEY, id])
   return res.value
 }
 

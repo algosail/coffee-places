@@ -20,6 +20,7 @@ composer.command('list', async (ctx) => {
     const keyboard = ctx.from?.username && ADMINS.includes(ctx.from.username)
       ? createAdminPlaceKeyboard(it.id)
       : undefined
+
     await sendPlaceCard(ctx, it, keyboard)
   }
 })
