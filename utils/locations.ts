@@ -1,14 +1,15 @@
 import type { Location } from 'grammy_types'
 import { kv } from './db.ts'
 import { getGeoData } from './geocoding.ts'
+import { addPlaceToList, deletePlaceFromList } from './list.ts'
 
 export interface Place {
   id: string
   title: string
   location: Location
   countryCode: string
-  locality: string
   city: string
+  locality: string
   address: string
   photo: string
   inst?: string
@@ -31,9 +32,13 @@ const getDistance = (me: Location, place: Location): number => {
   )
 }
 
-export const findPlaces = async (me: Location, count = 3): Promise<Place[]> => {
+export const findPlaces = async (
+  me: Location,
+  count = 3,
+  cursor = 0,
+): Promise<[Place[], boolean]> => {
   const geo = await getGeoData(me.latitude, me.longitude)
-  if (geo === null) return []
+  if (geo === null) return [[], false]
 
   const prefix = [PLACES_KEY, geo.countryCode, geo.city]
   const iter = kv.list<Place>({ prefix })
@@ -45,10 +50,10 @@ export const findPlaces = async (me: Location, count = 3): Promise<Place[]> => {
 
   const sorted = places
     .sort(([a], [b]) => a - b)
-    .slice(0, count)
+    .slice(cursor, cursor + count)
     .map(([, place]) => place)
 
-  return sorted
+  return [sorted, places.length > cursor + count]
 }
 
 export const listPlaces = async (): Promise<Place[]> => {
@@ -81,6 +86,7 @@ export const savePlace = async (place: Place) => {
     .set(placeKey, place)
 
   const res = await atomicOp.commit()
+  await addPlaceToList(place)
   return res.ok
 }
 
@@ -102,5 +108,6 @@ export const deletePlace = async (id: string) => {
     .delete(placeKey)
 
   const res = await atomicOp.commit()
+  await deletePlaceFromList(place)
   return res.ok
 }

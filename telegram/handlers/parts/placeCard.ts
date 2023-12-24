@@ -8,7 +8,7 @@ export const sendPlaceCard = async (
   place: Place,
   reply_markup?: InlineKeyboard,
 ) => {
-  await ctx.replyWithPhoto(place.photo, {
+  return await ctx.replyWithPhoto(place.photo, {
     reply_markup,
     caption:
       `<b>📍 <a href="${place.inst}">${place.title}</a>     📈 ${place.rating}/10</b>\n\n${

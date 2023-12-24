@@ -5,10 +5,12 @@ export const nameField = async (
   ctx: GrammyContext,
   prev?: string,
 ): Promise<string> => {
-  if (prev) {
-    await ctx.reply(`Edit name (prev <i>${prev}</i>):`)
-  } else {
-    await ctx.reply(`Place name:`)
-  }
-  return await con.form.text((ctx) => ctx.reply('Send name!'))
+  const text = prev ? `Edit name:\n(prev <i>${prev}</i>)` : `Place name:`
+  await ctx.reply(text)
+
+  const name = await con.waitFor('message:text', {
+    otherwise: (ctx) => ctx.reply('Send name!'),
+  })
+
+  return name.message.text
 }

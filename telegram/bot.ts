@@ -1,4 +1,3 @@
-import { InlineKeyboard } from 'grammy'
 import { hydrateReply, parseMode } from 'grammy_parse_mode'
 import { conversations } from 'grammy_conversations'
 
@@ -7,14 +6,10 @@ import { Bot, GrammyError, HttpError } from '$grammy/deps.ts'
 import commands, { listOfCommands } from '$grammy/handlers/commands/mod.ts'
 import { mainMenu } from '$grammy/handlers/menus/mod.ts'
 import conversationComposer from '$grammy/handlers/conversations/mod.ts'
-import triggerComposer from '$grammy/handlers/triggers/mod.ts'
-// import placeQuery from '$grammy/handlers/triggers/placeQuery.ts'
-// import groupEvents from "$grammy/middlewares/events.group.ts";
-// import hearingComposer from "$grammy/middlewares/hearing.ts";
+import triggers from '$grammy/handlers/triggers/mod.ts'
 import ping from '$grammy/middlewares/ping.ts'
 import session from '$grammy/middlewares/session.middleware.ts'
-import { TELEGRAM_BOT_TOKEN, WEBAPP_URL } from '$utils/constants.ts'
-import { findPlaces } from '$utils/locations.ts'
+import { TELEGRAM_BOT_TOKEN } from '$utils/constants.ts'
 
 export const grammy = new Bot<GrammyContext>(TELEGRAM_BOT_TOKEN)
 
@@ -24,51 +19,12 @@ grammy.use(hydrateReply<GrammyContext>)
 grammy.use(session)
 grammy.use(conversations())
 
-// custom middlewares
 grammy.use(ping)
-// grammy.use(groupEvents);
 
 grammy.use(conversationComposer)
 grammy.use(mainMenu)
 grammy.use(commands)
-grammy.use(triggerComposer)
-
-// --- End menus
-
-// grammy.on(':location', async (ctx) => {
-//   await ctx.replyWithChatAction('typing')
-
-//   if (!ctx.message?.location) {
-//     ctx.reply('Send me a location ;)')
-//     return
-//   }
-
-//   const places = await findPlaces(ctx.message.location)
-
-//   for (const place of places) {
-//     await ctx.replyWithVenue(
-//       place.location.latitude,
-//       place.location.longitude,
-//       place.title,
-//       place.address,
-//     )
-
-//     await ctx.reply(
-//       `
-//     <b>${place.title}</b>
-//     \n${place.address}
-//     `,
-//       {
-//         reply_markup: {
-//           inline_keyboard: new InlineKeyboard().webApp(
-//             'Show card',
-//             WEBAPP_URL + `/${place.id}`,
-//           ).inline_keyboard,
-//         },
-//       },
-//     )
-//   }
-// })
+grammy.use(triggers)
 
 grammy.api
   .setMyCommands(listOfCommands.filter((c) => c.show))

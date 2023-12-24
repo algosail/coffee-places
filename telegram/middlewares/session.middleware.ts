@@ -10,7 +10,11 @@ const storage = new DenoKVAdapter<any>(kv)
 
 session.use(
   grammySession({
-    initial: (): GrammySession => ({}),
+    initial: (): GrammySession => ({
+      placeId: null,
+      location: null,
+      cursor: 0,
+    }),
     getSessionKey: (ctx) =>
       `webapp_bot:${ctx.chat?.id.toString()}_${ctx.from?.id?.toString()}`,
     storage,

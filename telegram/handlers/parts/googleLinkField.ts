@@ -1,8 +1,5 @@
 import type { GrammyContext, GrammyConversation } from '$grammy/context.ts'
-import {
-  skipKeyboard,
-  SkipKeyboardKey,
-} from '$grammy/handlers/keyboards/mod.ts'
+import { skipKeyboard } from '$grammy/handlers/keyboards/mod.ts'
 
 export const googleLinkField = async (
   con: GrammyConversation,
@@ -15,7 +12,6 @@ export const googleLinkField = async (
     await ctx.reply(`Google maps link:`, { reply_markup: skipKeyboard })
   }
 
-  const link = await con.form.text()
-  if (link === SkipKeyboardKey.Skip) return undefined
-  return link
+  const link = await con.wait()
+  return link.message?.text
 }

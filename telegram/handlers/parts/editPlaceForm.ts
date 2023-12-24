@@ -26,7 +26,7 @@ export const editPlaceForm = async (
 ): Promise<Place | null> => {
   let state: ReviewKeyboardKey = ReviewKeyboardKey.Review
 
-  do {
+  while (state !== ReviewKeyboardKey.Save) {
     switch (state) {
       case ReviewKeyboardKey.Title:
         place.title = await nameField(con, ctx, place.title)
@@ -79,19 +79,16 @@ export const editPlaceForm = async (
       case ReviewKeyboardKey.Cancel:
         return null
       case ReviewKeyboardKey.Review: {
-        await sendPlaceCard(ctx, place, reviewKeyboard)
-        const res = await con.waitForCallbackQuery(reviewKeyboardKeys, {
-          otherwise: (ctx) => {
-            ctx.reply('Use the buttons!', { reply_markup: reviewKeyboard })
-          },
-        })
+        const preview = await sendPlaceCard(ctx, place, reviewKeyboard)
+        const res = await con.waitForCallbackQuery(reviewKeyboardKeys)
+        await ctx.api.deleteMessage(preview.chat.id, preview.message_id)
         state = res.match as ReviewKeyboardKey
         break
       }
       default:
         break
     }
-  } while (state !== ReviewKeyboardKey.Save)
+  }
 
   return place
 }

@@ -6,6 +6,7 @@ import { getFullName } from '$utils/grammy.ts'
 const composer = new Composer<GrammyContext>()
 
 composer.command('start', async (ctx) => {
+  await ctx.conversation.exit()
   await ctx.reply(
     `
 		Hi ${
