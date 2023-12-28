@@ -16,7 +16,7 @@ session.use(
       cursor: 0,
     }),
     getSessionKey: (ctx) =>
-      `webapp_bot:${ctx.chat?.id.toString()}_${ctx.from?.id?.toString()}`,
+      `coffee_place_bot:${ctx.chat?.id.toString()}_${ctx.from?.id?.toString()}`,
     storage,
   }),
 )

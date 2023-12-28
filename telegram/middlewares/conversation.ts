@@ -2,8 +2,8 @@ import { MiddlewareFn } from 'grammy'
 
 import { GrammyContext } from '$grammy/context.ts'
 
-import { listOfCommands } from '$grammy/handlers/commands/mod.ts'
-import { CancelKeyboardKey } from '$grammy/handlers/keyboards/mod.ts'
+import { listOfCommands } from '$grammy/commands/mod.ts'
+import { CancelKeyboardKey } from '$grammy/keyboards/mod.ts'
 
 const conversation: MiddlewareFn<GrammyContext> = async (
   ctx,

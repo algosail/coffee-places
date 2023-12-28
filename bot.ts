@@ -5,6 +5,8 @@ import { green } from '$std/fmt/colors.ts'
 
 import { grammy } from '$grammy/bot.ts'
 
+await grammy.api.deleteWebhook()
+
 grammy.start({
   drop_pending_updates: true,
   allowed_updates: [

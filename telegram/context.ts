@@ -12,6 +12,10 @@ export interface GrammySession {
   placeId: string | null
   location: Location | null
   cursor: number
+  bookmarkCursor?: string
+  cityListCountry?: string
+  localityListCity?: string
+  placeListLocality?: string
   user?: {
     __language_code?: string
   }
