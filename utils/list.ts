@@ -100,6 +100,17 @@ export const getCityList = async (countryCode: string): Promise<string[]> => {
   return [...res.value]
 }
 
+export const getAllCityList = async (): Promise<string[]> => {
+  const res = await kv.list<Set<string>>({ prefix: [COUNTRY_KEY] })
+  const cities: string[] = []
+
+  for await (const country of res) {
+    cities.push(...country.value)
+  }
+
+  return cities
+}
+
 export const getLocalityList = async (city: string): Promise<string[]> => {
   const res = await kv.get<Set<string>>([CITY_KEY, city])
   if (!res.value) return []
