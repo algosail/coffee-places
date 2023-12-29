@@ -110,7 +110,11 @@ export default function Home({ data }: PageProps<Data>) {
           <h3 class='footer__title'>For cooperation</h3>
           <ul class='footer__list'>
             <li class='footer__item'>
-              <a href='#' aria-label='telegram link' class='footer__link'>
+              <a
+                href='https://t.me/deryfe'
+                aria-label='telegram link'
+                class='footer__link'
+              >
                 <svg
                   xmlns='http://www.w3.org/2000/svg'
                   width='24'
@@ -128,7 +132,11 @@ export default function Home({ data }: PageProps<Data>) {
               </a>
             </li>
             <li class='footer__item'>
-              <a href='#' aria-label='email link' class='footer__link'>
+              <a
+                href='mailto:coffeelocation.bot@gmail.com'
+                aria-label='email link'
+                class='footer__link'
+              >
                 <svg
                   xmlns='http://www.w3.org/2000/svg'
                   width='27'
@@ -155,7 +163,11 @@ export default function Home({ data }: PageProps<Data>) {
               </a>
             </li>
             <li class='footer__item'>
-              <a href='#' aria-label='instagram link' class='footer__link'>
+              <a
+                href='https://www.instagram.com/coffee_location_tbs?igsh=aXQwdnNtd2JsNXdu&utm_source=qr'
+                aria-label='instagram link'
+                class='footer__link'
+              >
                 <svg
                   xmlns='http://www.w3.org/2000/svg'
                   width='24'
