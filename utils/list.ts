@@ -31,7 +31,8 @@ export const addPlaceToList = async (data: Data) => {
   cityValue.add(data.locality)
   localityValue.set(data.id, { id: data.id, title: data.title })
 
-  const atomicOp = await kv.atomic()
+  const atomicOp = await kv
+    .atomic()
     .set(countryKey, countryValue)
     .set(cityKey, cityValue)
     .set(localityKey, localityValue)
@@ -123,4 +124,21 @@ export const getPlaceList = async (
   const res = await kv.get<Map<string, PlaceListData>>([LOCALITY_KEY, locality])
   if (!res.value) return []
   return [...res.value.values()]
+}
+
+export const getPlaceOfCityList = async (
+  city: string,
+): Promise<PlaceListData[]> => {
+  const localities = await getLocalityList(city)
+  const placeLocality = localities.map((locality) => getPlaceList(locality))
+
+  const placesMap: Map<string, PlaceListData> = new Map()
+
+  for await (const places of placeLocality) {
+    for (const place of places) {
+      placesMap.set(place.id, place)
+    }
+  }
+
+  return Array.from(placesMap.values())
 }

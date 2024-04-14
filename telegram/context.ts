@@ -16,14 +16,14 @@ export interface GrammySession {
   cityListCountry?: string
   localityListCity?: string
   placeListLocality?: string
+  placeListCity?: string
   user?: {
     __language_code?: string
   }
 }
 
-export type GrammyContext =
-  & SessionFlavor<GrammySession>
-  & ParseModeFlavor<Context>
-  & ConversationFlavor<Context>
+export type GrammyContext = SessionFlavor<GrammySession> &
+  ParseModeFlavor<Context> &
+  ConversationFlavor<Context>
 
 export type GrammyConversation = Conversation<GrammyContext>

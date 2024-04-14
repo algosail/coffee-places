@@ -1,11 +1,6 @@
 import { Menu, MenuRange } from 'grammy_menu'
 
-import {
-  getCityList,
-  getCountryList,
-  getLocalityList,
-  getPlaceList,
-} from '$utils/list.ts'
+import { getCityList, getCountryList, getPlaceOfCityList } from '$utils/list.ts'
 import { GrammyContext } from '$grammy/context.ts'
 import { showPlace } from '$grammy/utils/mod.ts'
 
@@ -26,8 +21,8 @@ const renderPlace = async (ctx: GrammyContext) => {
 const placesMenu = new Menu<GrammyContext>(ListMenu.Place)
   .addRange(async (ctx) => {
     const range = new MenuRange<GrammyContext>()
-    if (!ctx.session.placeListLocality) return range
-    const places = await getPlaceList(ctx.session.placeListLocality)
+    if (!ctx.session.placeListCity) return range
+    const places = await getPlaceOfCityList(ctx.session.placeListCity)
 
     for (const { id, title } of places) {
       range.text({ text: title, payload: id }, renderPlace).row()
@@ -37,23 +32,25 @@ const placesMenu = new Menu<GrammyContext>(ListMenu.Place)
   })
   .back('Back')
 
-const localitiesMenu = new Menu<GrammyContext>(ListMenu.Locality)
-  .addRange(async (ctx) => {
-    const range = new MenuRange<GrammyContext>()
-    if (!ctx.session.localityListCity) return range
-    const localities = await getLocalityList(ctx.session.localityListCity)
+// const localitiesMenu = new Menu<GrammyContext>(ListMenu.Locality)
+//   .addRange(async (ctx) => {
+//     const range = new MenuRange<GrammyContext>()
+//     if (!ctx.session.localityListCity) return range
+//     const localities = await getLocalityList(ctx.session.localityListCity)
 
-    for (const locality of localities) {
-      range.submenu(locality, ListMenu.Place, (ctx) => {
-        ctx.session.placeListLocality = locality
-      }).row()
-    }
+//     for (const locality of localities) {
+//       range
+//         .submenu(locality, ListMenu.Place, (ctx) => {
+//           ctx.session.placeListLocality = locality
+//         })
+//         .row()
+//     }
 
-    return range
-  })
-  .back('Back')
+//     return range
+//   })
+//   .back('Back')
 
-localitiesMenu.register(placesMenu)
+// localitiesMenu.register(placesMenu)
 
 const cityMenu = new Menu<GrammyContext>(ListMenu.City)
   .addRange(async (ctx) => {
@@ -62,16 +59,18 @@ const cityMenu = new Menu<GrammyContext>(ListMenu.City)
     const cities = await getCityList(ctx.session.cityListCountry)
 
     for (const city of cities) {
-      range.submenu(city, ListMenu.Locality, (ctx) => {
-        ctx.session.localityListCity = city
-      }).row()
+      range
+        .submenu(city, ListMenu.Place, (ctx) => {
+          ctx.session.placeListCity = city
+        })
+        .row()
     }
 
     return range
   })
   .back('Back')
 
-cityMenu.register(localitiesMenu)
+cityMenu.register(placesMenu)
 
 export const listMenu = new Menu<GrammyContext>(ListMenu.Country)
   .addRange(async () => {
@@ -79,9 +78,11 @@ export const listMenu = new Menu<GrammyContext>(ListMenu.Country)
     const countries = await getCountryList()
 
     for (const country of countries) {
-      range.submenu(country, ListMenu.City, (ctx) => {
-        ctx.session.cityListCountry = country
-      }).row()
+      range
+        .submenu(country, ListMenu.City, (ctx) => {
+          ctx.session.cityListCountry = country
+        })
+        .row()
     }
 
     return range
