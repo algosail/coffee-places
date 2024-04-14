@@ -11,7 +11,7 @@ export const mainMenu = new Menu<GrammyContext>('main-menu')
   .submenu('Bookmarks', 'bookmarks')
   .url('About', 'https://coffee-places.deno.dev')
   .row()
-  .submenu('Places list', ListMenu.Country).row()
+  // .submenu('Places list', ListMenu.Country).row()
   .dynamic((ctx) => {
     const range = new MenuRange<GrammyContext>()
 

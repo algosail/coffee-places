@@ -2,14 +2,12 @@
   "lock": false,
   "tasks": {
     "bot": "deno run --unstable -A --watch=telegram/,utils/ bot.ts",
-    "start": "deno run --unstable -A --watch=static/,routes/ dev.ts"
+    "start": "deno run --unstable -A --watch=static/,routes/ dev.ts",
+    "db:reset": "deno run --allow-read --allow-net --allow-env --unstable-kv tasks/db_remove_sessions.ts"
   },
   "lint": {
     "rules": {
-      "tags": [
-        "fresh",
-        "recommended"
-      ]
+      "tags": ["fresh", "recommended"]
     }
   },
   "fmt": {
