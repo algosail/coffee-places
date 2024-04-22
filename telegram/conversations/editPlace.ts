@@ -5,12 +5,15 @@ import conversationLeave from '$grammy/middlewares/conversation.ts'
 import { cancelKeyboard } from '$grammy/keyboards/mod.ts'
 import { editPlaceForm } from '$grammy/components/mod.ts'
 
+import { getPlaceCardText } from '../components/placeCardText.ts'
+
 export const editPlace = async (
   con: GrammyConversation,
   ctx: GrammyContext,
 ) => {
   if (
-    !con.session.placeId || !ctx.from?.username ||
+    !con.session.placeId ||
+    !ctx.from?.username ||
     !ADMINS.includes(ctx.from.username)
   ) {
     await ctx.reply(`Access deny`)
@@ -37,6 +40,9 @@ export const editPlace = async (
       saving.message_id,
       ok ? 'Done!' : 'Database error!',
     )
+    await ctx.replyWithPhoto(place.photo, {
+      caption: getPlaceCardText(place),
+    })
     await ctx.reply(`<b>Default mode</b>\n=====================`)
   } catch (_error) {
     await ctx.reply(`<b>Edit place canceled!</b>`)

@@ -37,8 +37,7 @@ composer.on('callback_query:data', (ctx) => {
     case PlaceKeyboardKey.Location:
       return showLocation(ctx, value)
     case PlaceKeyboardKey.Edit:
-      editPlace(ctx, value)
-      break
+      return editPlace(ctx, value)
     case PlaceKeyboardKey.Delete:
       return removePlace(ctx, value)
     default:

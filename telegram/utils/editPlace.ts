@@ -8,5 +8,6 @@ export const editPlace = async (ctx: GrammyContext, placeId: string) => {
   }
 
   ctx.session.placeId = placeId
+  await ctx.conversation.exit()
   await ctx.conversation.enter('edit-place')
 }

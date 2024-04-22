@@ -24,74 +24,56 @@ export const editPlaceForm = async (
   ctx: GrammyContext,
   place: Place,
 ): Promise<Place | null> => {
-  let state: ReviewKeyboardKey = ReviewKeyboardKey.Review
+  const nextPlace = { ...place }
 
-  while (state !== ReviewKeyboardKey.Save) {
-    switch (state) {
-      case ReviewKeyboardKey.Title:
-        place.title = await nameField(con, ctx, place.title)
-        state = ReviewKeyboardKey.Review
-        break
-      case ReviewKeyboardKey.Address:
-        place.address = await addressField(con, ctx, place.address)
-        state = ReviewKeyboardKey.Review
-        break
-      case ReviewKeyboardKey.Photo:
-        place.photo = await photoField(con, ctx, place.photo)
-        state = ReviewKeyboardKey.Review
-        break
-      case ReviewKeyboardKey.Inst:
-        place.inst = await instField(con, ctx, place.inst)
-        state = ReviewKeyboardKey.Review
-        break
-      case ReviewKeyboardKey.GoogleLink:
-        place.google_uri = await googleLinkField(con, ctx, place.google_uri)
-        state = ReviewKeyboardKey.Review
-        break
-      case ReviewKeyboardKey.MilkPrice:
-        place.milk_price = await milkPriceField(con, ctx, place.milk_price)
-        state = ReviewKeyboardKey.Review
-        break
-      case ReviewKeyboardKey.BlackPrice:
-        place.black_price = await blackPriceField(con, ctx, place.black_price)
-        state = ReviewKeyboardKey.Review
-        break
-      case ReviewKeyboardKey.Food:
-        place.food = await foodField(con, ctx, place.food)
-        state = ReviewKeyboardKey.Review
-        break
-      case ReviewKeyboardKey.Wifi:
-        place.wifi = await wifiField(con, ctx, place.wifi)
-        state = ReviewKeyboardKey.Review
-        break
-      case ReviewKeyboardKey.WorkingHours:
-        place.working_hours = await workingHoursField(
-          con,
-          ctx,
-          place.working_hours,
-        )
-        state = ReviewKeyboardKey.Review
-        break
-      case ReviewKeyboardKey.Rating:
-        place.rating = await ratingField(con, ctx, place.rating)
-        state = ReviewKeyboardKey.Review
-        break
-      case ReviewKeyboardKey.Cancel:
-        return null
-      case ReviewKeyboardKey.Review: {
-        const preview = await ctx.replyWithPhoto(place.photo, {
-          caption: getPlaceCardText(place),
-          reply_markup: reviewKeyboard,
-        })
-        const res = await con.waitForCallbackQuery(reviewKeyboardKeys)
-        await ctx.api.deleteMessage(preview.chat.id, preview.message_id)
-        state = res.match as ReviewKeyboardKey
-        break
-      }
-      default:
-        break
-    }
+  const preview = await ctx.replyWithPhoto(place.photo, {
+    caption: getPlaceCardText(place),
+    reply_markup: reviewKeyboard,
+  })
+  const res = await con.waitForCallbackQuery(reviewKeyboardKeys)
+  await ctx.api.deleteMessage(preview.chat.id, preview.message_id)
+
+  switch (res.match) {
+    case ReviewKeyboardKey.Title:
+      nextPlace.title = await nameField(con, ctx, place.title)
+      break
+    case ReviewKeyboardKey.Address:
+      nextPlace.address = await addressField(con, ctx, place.address)
+      break
+    case ReviewKeyboardKey.Photo:
+      nextPlace.photo = await photoField(con, ctx, place.photo)
+      break
+    case ReviewKeyboardKey.Inst:
+      nextPlace.inst = await instField(con, ctx, place.inst)
+      break
+    case ReviewKeyboardKey.GoogleLink:
+      nextPlace.google_uri = await googleLinkField(con, ctx, place.google_uri)
+      break
+    case ReviewKeyboardKey.MilkPrice:
+      nextPlace.milk_price = await milkPriceField(con, ctx, place.milk_price)
+      break
+    case ReviewKeyboardKey.BlackPrice:
+      nextPlace.black_price = await blackPriceField(con, ctx, place.black_price)
+      break
+    case ReviewKeyboardKey.Food:
+      nextPlace.food = await foodField(con, ctx, place.food)
+      break
+    case ReviewKeyboardKey.Wifi:
+      nextPlace.wifi = await wifiField(con, ctx, place.wifi)
+      break
+    case ReviewKeyboardKey.WorkingHours:
+      nextPlace.working_hours = await workingHoursField(
+        con,
+        ctx,
+        place.working_hours,
+      )
+      break
+    case ReviewKeyboardKey.Rating:
+      nextPlace.rating = await ratingField(con, ctx, place.rating)
+      break
+    default:
+      break
   }
 
-  return place
+  return nextPlace
 }

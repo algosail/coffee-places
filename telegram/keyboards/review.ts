@@ -32,4 +32,4 @@ export const reviewKeyboard = new InlineKeyboard()
   .text('Edit rating', ReviewKeyboardKey.Rating).row()
   .text('Cancel', ReviewKeyboardKey.Cancel)
 
-export const reviewKeyboardKeys = Object.values(ReviewKeyboardKey)
+export const reviewKeyboardKeys = Array.from(Object.values(ReviewKeyboardKey))
